@@ -8,6 +8,8 @@ import store from './store'
 Vue.use(Vuex)
 Vue.component('app', require('./App.vue'))
 
+require('./scss/app.scss')
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
