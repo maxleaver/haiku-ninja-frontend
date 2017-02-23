@@ -55,10 +55,14 @@ export const mutations = {
   },
 
   incrementComment (state) {
-    state.activeComment = state.activeComment + 1
+    if (state.activeComment + 1 < state.comments.length) {
+      state.activeComment = state.activeComment + 1
+    }
   },
 
   decrementComment (state) {
-    state.activeComment = state.activeComment - 1
+    if (state.activeComment > 0) {
+      state.activeComment = state.activeComment - 1
+    }
   }
 }

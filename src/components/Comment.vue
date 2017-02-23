@@ -1,12 +1,14 @@
 <template>
-  <blockquote>
-    <p>
-      {{ first }}<br />
-      {{ second }}<br />
-      {{ third }}
-    </p>
-    <footer>{{ author }}</footer>
-  </blockquote>
+  <div class="col-xs-12 col-xs-8">
+    <blockquote>
+      <p>
+        <span id="firstLine">{{ first }}</span><br />
+        <span id="secondLine">{{ second }}</span><br />
+        <span id="thirdLine">{{ third }}</span>
+      </p>
+      <footer id="author">{{ author }}</footer>
+    </blockquote>
+  </div>
 </template>
 
 <script>

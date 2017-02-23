@@ -76,14 +76,38 @@ describe('mutations', () => {
   })
 
   it('increases the active comment by one', () => {
-    const state = { activeComment: 5 }
+    const state = {
+      comments: ['one', 'two', 'three'],
+      activeComment: 1
+    }
     mutations.incrementComment(state)
-    expect(state.activeComment).to.equal(6)
+    expect(state.activeComment).to.equal(2)
+  })
+
+  it('will not increase active comment past the total comment count', () => {
+    const state = {
+      comments: ['one', 'two', 'three'],
+      activeComment: 2
+    }
+    mutations.incrementComment(state)
+    expect(state.activeComment).to.equal(2)
   })
 
   it('decreases the active comment by one', () => {
-    const state = { activeComment: 5 }
+    const state = {
+      comments: ['one', 'two', 'three'],
+      activeComment: 2
+    }
     mutations.decrementComment(state)
-    expect(state.activeComment).to.equal(4)
+    expect(state.activeComment).to.equal(1)
+  })
+
+  it('will not decrease active comment below zero', () => {
+    const state = {
+      comments: ['one', 'two', 'three'],
+      activeComment: 0
+    }
+    mutations.decrementComment(state)
+    expect(state.activeComment).to.equal(0)
   })
 })

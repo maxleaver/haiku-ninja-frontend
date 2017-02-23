@@ -1,7 +1,7 @@
 <template>
   <footer class="row app-footer">
     <div class="col-xs-12 text-center">
-      <span>&copy; {{ year }}, Max Leaver</span>
+      &copy; <span>{{ year }}</span>, Max Leaver
     </div>
   </footer>
 </template>

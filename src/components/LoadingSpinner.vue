@@ -10,17 +10,21 @@
       Found <span class="found">{{ foundTicker }}</span> Haiku in <span class="searched">{{ searchedTicker }}</span> comments
     </p>
 
-    <button v-on:click="cancelRequest" class="btn btn-lg btn-danger">
-      <span class="glyphicon glyphicon-stop"></span> Stop Searching
+    <button v-on:click="cancel" class="btn btn-lg btn-danger">
+      <span class="glyphicon glyphicon-stop"></span> <span id="buttonText">Stop Searching</span>
     </button>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
-
 export default {
   name: 'loading-spinner',
+
+  props: {
+    cancel: Function,
+    found: Number,
+    searched: Number
+  },
 
   data () {
     return {
@@ -31,29 +35,22 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState(['recordsSearched']),
-    ...mapGetters(['foundRecords'])
-  },
-
-  ready: function () {
-    this.foundTicker = this.foundRecords ? this.foundRecords : 0
-    this.searchedTicker = this.recordsSearched ? this.recordsSearched : 0
+  created: function () {
+    this.foundTicker = this.found ? this.found : 0
+    this.searchedTicker = this.searched ? this.searched : 0
   },
 
   watch: {
-    recordsSearched: function (newValue, oldValue) {
-      this.startNumberTicker('searchedInterval', 'recordsSearched', 'searchedTicker')
+    searched: function (newValue, oldValue) {
+      this.startNumberTicker('searchedInterval', 'searched', 'searchedTicker')
     },
 
-    foundRecords: function () {
-      this.startNumberTicker('foundInterval', 'foundRecords', 'foundTicker')
+    found: function () {
+      this.startNumberTicker('foundInterval', 'found', 'foundTicker')
     }
   },
 
   methods: {
-    ...mapActions(['cancelRequest']),
-
     startNumberTicker: function (intervalName, newValue, oldValue) {
       clearInterval(this[intervalName])
 

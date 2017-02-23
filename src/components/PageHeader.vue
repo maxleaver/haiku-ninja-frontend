@@ -3,7 +3,6 @@
     <div class="header-container">
       <div class="header-row">
         <div class="logo"></div>
-
         <div>
           <h1>Haiku Ninja</h1>
           <p>Finding Zen in YouTube Comments</p>

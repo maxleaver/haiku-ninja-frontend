@@ -121,6 +121,11 @@ blockquote footer {
   color: $brand-danger;
 }
 
+.disabled {
+  color: $text-muted;
+  cursor: not-allowed;
+}
+
 /* Small devices (tablets, 768px and up) */
 @media (min-width: $screen-sm-min) {
   .logo {

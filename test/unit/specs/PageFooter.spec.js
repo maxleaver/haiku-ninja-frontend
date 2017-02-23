@@ -1,17 +1,18 @@
-import Vue from 'vue'
+import { mount } from 'avoriaz'
 import PageFooter from 'src/components/PageFooter'
 
-// helper function that mounts and returns the rendered text
-function getRenderedText (Component, propsData) {
-  const Comp = Vue.extend(Component)
-  const vm = new Comp({ propsData: propsData }).$mount()
-  return vm.$el.textContent
-}
-
 describe('PageFooter.vue', () => {
-  it('should render correct contents', () => {
-    expect(getRenderedText(PageFooter, {
-      year: 2017
-    })).to.equal('© 2017, Max Leaver')
+  var wrapper
+
+  beforeEach(() => {
+    wrapper = mount(PageFooter, {
+      propsData: {
+        year: 2001
+      }
+    })
+  })
+
+  it('displays the year passed in props', () => {
+    expect(wrapper.find('span')[0].text()).to.equal('2001')
   })
 })

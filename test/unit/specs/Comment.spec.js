@@ -1,20 +1,24 @@
-import Vue from 'vue'
+import { mount } from 'avoriaz'
 import Comment from 'src/components/Comment'
 
-// helper function that mounts and returns the rendered text
-function getRenderedText (Component, propsData) {
-  const Comp = Vue.extend(Component)
-  const vm = new Comp({ propsData: propsData }).$mount()
-  return vm.$el.textContent
-}
-
 describe('Comment.vue', () => {
-  it('should render correct contents', () => {
-    expect(getRenderedText(Comment, {
-      author: 'John Doe',
-      first: 'First line',
-      second: 'Second line',
-      third: 'Third line'
-    })).to.equal('\n    First line\n    Second line\n    Third line\n   John Doe')
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = mount(Comment, {
+      propsData: {
+        author: 'John Doe',
+        first: 'First line',
+        second: 'Second line',
+        third: 'Third line'
+      }
+    })
+  })
+
+  it('renders prop data correctly', () => {
+    expect(wrapper.find('#firstLine')[0].text()).to.equal('First line')
+    expect(wrapper.find('#secondLine')[0].text()).to.equal('Second line')
+    expect(wrapper.find('#thirdLine')[0].text()).to.equal('Third line')
+    expect(wrapper.find('#author')[0].text()).to.equal('John Doe')
   })
 })

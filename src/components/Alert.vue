@@ -1,19 +1,15 @@
 <template>
   <div class="alert alert-danger text-center">
-    <span class="glyphicon glyphicon-exclamation-sign"></span> {{ errorMessage }}
+    <span class="glyphicon glyphicon-exclamation-sign"></span> <span id="errorMessage">{{ message }}</span>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   name: 'alert',
 
-  computed: {
-    ...mapState([
-      'errorMessage'
-    ])
+  props: {
+    message: String
   }
 }
 </script>

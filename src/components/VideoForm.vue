@@ -10,23 +10,17 @@
       <div class="form-group">
         <label for="url">Enter a YouTube Video</label>
 
-        <alert v-if="hasError"></alert>
+        <alert v-if="hasError" :message="errorMessage"></alert>
 
         <input
-          :value="videoUrl"
-          @input="updateUrl"
-          v-bind:disabled="isRequesting"
+          @input="update"
           v-on:keydown.enter="submit"
           id="url"
           type="text"
           placeholder="Ex. https://youtu.be/dQw4w9WgXcQ"
           class="form-control input-lg">
 
-        <button v-if="isRequesting" class="btn btn-lg btn-success" v-bind:disabled="isRequesting">
-          <span class="glyphicon glyphicon-refresh spin"></span> Finding inner peace...
-        </button>
-
-        <button v-else v-on:click="submit" class="btn btn-lg btn-success">
+        <button v-on:click="submit" class="btn btn-lg btn-success">
           <span class="glyphicon glyphicon-leaf"></span> Find inner peace
         </button>
       </div>
@@ -36,7 +30,6 @@
 
 <script>
 import Alert from './Alert.vue'
-import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'video-form',
@@ -45,24 +38,12 @@ export default {
     Alert
   },
 
-  computed: {
-    ...mapState([
-      'hasError',
-      'isRequesting',
-      'videoUrl'
-    ])
-  },
-
-  methods: {
-    ...mapActions(['submitForm']),
-
-    updateUrl (e) {
-      this.$store.commit('updateUrl', e.target.value)
-    },
-
-    submit () {
-      this.$store.dispatch('submitForm', this.videoUrl)
-    }
+  props: {
+    errorMessage: String,
+    hasError: Boolean,
+    submit: Function,
+    update: Function,
+    videoUrl: String
   }
 }
 </script>
