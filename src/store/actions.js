@@ -4,7 +4,7 @@ import HttpErrorHandler from 'src/services/HttpErrorHandler'
 import lang from 'src/lang/en'
 
 var CancelToken = axios.CancelToken
-var source = CancelToken.source()
+var cancel
 
 export const submitForm = ({ commit, dispatch, state }) => {
   const id = getYouTubeID(state.videoUrl)
@@ -39,7 +39,9 @@ export const fetchComments = ({ commit, dispatch }, payload) => {
 
     headers: { 'Authorization': 'Bearer ' + process.env.JWT_TOKEN },
 
-    cancelToken: source.token
+    cancelToken: new CancelToken(function executor (c) {
+      cancel = c
+    })
   })
   .then(response => {
     if (!response.hasOwnProperty('data') || !response.data) {
@@ -84,6 +86,6 @@ export const fetchComments = ({ commit, dispatch }, payload) => {
 }
 
 export const cancelRequest = ({ commit }) => {
-  source.cancel('Operation cancelled by user')
+  cancel('Operation cancelled by user')
   commit('showResults')
 }
