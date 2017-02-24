@@ -1,6 +1,6 @@
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
-@import url('https://fonts.googleapis.com/css?family=Arapey:400i|Lato:100,400,700');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,700');
 
 html, body {
   font-family: 'Lato', 'Proxima Nova', 'Helvetica', 'Helvetica Neue', 'Arial', sans-serif !important;
@@ -8,11 +8,11 @@ html, body {
 }
 
 h1 {
-  font-weight: 400;
+  font-weight: 700;
 }
 
 h2, h3 {
-  font-weight: 100;
+  font-weight: 300;
 }
 
 .glyphicon-xl {
@@ -21,7 +21,6 @@ h2, h3 {
 
 header {
   margin: 15px 0 15px;
-  font-weight: 400;
 }
 
 header h1 {
@@ -30,9 +29,8 @@ header h1 {
 }
 
 header p {
-  font-family: 'Arapey', sans-serif;
-  font-style: italic;
   font-size: 1.1em;
+  font-weight: 300;
   color: #999;
 }
 
@@ -98,12 +96,12 @@ blockquote {
 }
 
 blockquote p {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 blockquote footer {
   font-size: 0.7em;
-  font-weight: 100;
+  font-weight: 300;
   color: #999;
 }
 
@@ -152,7 +150,7 @@ blockquote footer {
   }
 
   header p {
-    font-size: 1.4em;
+    font-size: 1.5em;
   }
 
   .form-inline input {
