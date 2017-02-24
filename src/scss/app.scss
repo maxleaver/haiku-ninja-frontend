@@ -20,19 +20,19 @@ h2, h3 {
 }
 
 header {
-  margin: 40px 0 20px;
+  margin: 15px 0 15px;
   font-weight: 400;
 }
 
 header h1 {
-  font-size: 3em;
+  font-size: 2.5em;
   margin: 10px 0 0;
 }
 
 header p {
   font-family: 'Arapey', sans-serif;
   font-style: italic;
-  font-size: 1.4em;
+  font-size: 1.1em;
   color: #999;
 }
 
@@ -56,8 +56,8 @@ header p {
 .logo {
   background-image: url('~assets/red-circle.png');
   background-size: cover;
-  height: 80px;
-  width: 80px;
+  height: 60px;
+  width: 60px;
   margin-right: 20px;
 }
 
@@ -141,6 +141,18 @@ blockquote footer {
 
   .header-row {
     flex-direction: column;
+  }
+
+  header {
+    margin: 40px 0 20px;
+  }
+
+  header h1 {
+    font-size: 3em;
+  }
+
+  header p {
+    font-size: 1.4em;
   }
 
   .form-inline input {
