@@ -20,12 +20,12 @@ export const submitForm = ({ commit, dispatch, state }) => {
 
 export const fetchComments = ({ commit, dispatch }, payload) => {
   // Confirm data has id property
-  if (!payload.hasOwnProperty('id') || payload.id === 'undefined') {
+  if (!payload.hasOwnProperty('id') || !payload.id) {
     commit('showError', lang.errors.badRequest)
   }
 
   // Set next page token to null if one was not received
-  if (!payload.hasOwnProperty('nextPageToken') || payload.nextPageToken === 'undefined') {
+  if (!payload.hasOwnProperty('nextPageToken') || !payload.nextPageToken) {
     payload.nextPageToken = null
   }
 
@@ -42,23 +42,23 @@ export const fetchComments = ({ commit, dispatch }, payload) => {
     cancelToken: source.token
   })
   .then(response => {
-    if (typeof response.data === 'undefined') {
+    if (!response.hasOwnProperty('data') || !response.data) {
       // No data in response
       commit('showResults')
       return
     }
 
-    if (response.data.hasOwnProperty('haiku') && typeof response.data.haiku !== 'undefined') {
+    if (response.data.hasOwnProperty('haiku') && response.data.haiku) {
       // No haiku in response
       commit('appendComments', response.data.haiku)
     }
 
-    if (response.data.hasOwnProperty('commentsSearched') && typeof response.data.commentsSearched !== 'undefined') {
+    if (response.data.hasOwnProperty('commentsSearched') && response.data.commentsSearched) {
       // No comments searched count in response
       commit('incrementSearched', response.data.commentsSearched)
     }
 
-    if (response.data.hasOwnProperty('nextPageToken') && typeof response.data.nextPageToken !== 'undefined') {
+    if (response.data.hasOwnProperty('nextPageToken') && response.data.nextPageToken) {
       // Next page token found. Fetching again.
       dispatch('fetchComments', { id: payload.id, nextPageToken: response.data.nextPageToken })
       return
