@@ -1,0 +1,5 @@
+<ifModule mod_headers.c>
+BrowserMatch "Safari" nokeepalive
+BrowserMatch "AppleWebKit" nokeepalive
+BrowserMatch "CFNetwork" nokeepalive
+</ifModule>
