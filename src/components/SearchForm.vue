@@ -1,27 +1,25 @@
 <template>
   <div>
     <p class="lead text-center">
-      Put the URL<br />
-      of a YouTube video<br />
-      in the form below.
+      Search YouTube comments<br />
+      for hidden moments of Zen<br />
+      in cat videos.
     </p>
 
     <div class="form-inline">
       <div class="form-group">
-        <label for="url">Enter a YouTube Video</label>
-
         <alert v-if="hasError" :message="errorMessage"></alert>
 
         <input
           @input="update"
           v-on:keydown.enter="submit"
-          id="url"
           type="text"
-          placeholder="Ex. https://youtu.be/dQw4w9WgXcQ"
-          class="form-control input-lg">
+          v-bind:placeholder="$t('inputPlaceholder')"
+          class="form-control input-lg"
+          >
 
-        <button v-on:click="submit" class="btn btn-lg btn-success">
-          <span class="glyphicon glyphicon-leaf"></span> Find inner peace
+        <button id="search-submit" v-on:click="submit" class="btn btn-lg btn-success">
+          <span class="glyphicon glyphicon-leaf"></span> {{ $t('submitButton') }}
         </button>
       </div>
     </div>
@@ -32,7 +30,7 @@
 import Alert from './Alert.vue'
 
 export default {
-  name: 'video-form',
+  name: 'search-form',
 
   components: {
     Alert
@@ -43,7 +41,7 @@ export default {
     hasError: Boolean,
     submit: Function,
     update: Function,
-    videoUrl: String
+    formInput: String
   }
 }
 </script>

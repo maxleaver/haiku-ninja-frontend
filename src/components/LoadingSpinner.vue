@@ -1,17 +1,17 @@
 <template>
   <div class="text-center">
-    <h1>Finding Zen</h1>
+    <h1>{{ $t('loadingHeader') }}</h1>
 
     <div>
       <span class="glyphicon glyphicon-refresh spin glyphicon-xl text-muted"></span>
     </div>
 
-    <p class="lead">
-      Found <span class="found">{{ foundTicker }}</span> Haiku in <span class="searched">{{ searchedTicker }}</span> comments
+    <p id="resultCounter" class="lead" v-if="isFetchingHaiku">
+      {{ $tlang('en', 'foundHaiku', { found: foundTicker, searched: searchedTicker }) }}
     </p>
 
     <button v-on:click="cancel" class="btn btn-lg btn-danger">
-      <span class="glyphicon glyphicon-stop"></span> <span id="buttonText">Stop Searching</span>
+      <span class="glyphicon glyphicon-stop"></span> <span id="buttonText">{{ $t('stopSearchButton') }}</span>
     </button>
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
   name: 'loading-spinner',
 
   props: {
+    isFetchingHaiku: Boolean,
     cancel: Function,
     found: Number,
     searched: Number

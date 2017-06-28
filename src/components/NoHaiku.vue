@@ -10,6 +10,6 @@
 
 <script>
 export default {
-  name: 'no-comments'
+  name: 'no-haiku'
 }
 </script>

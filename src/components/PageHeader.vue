@@ -4,8 +4,8 @@
       <div class="header-row">
         <div class="logo"></div>
         <div>
-          <h1>Haiku Ninja</h1>
-          <p>Finding Zen in YouTube Comments</p>
+          <h1>{{ $t('title') }}</h1>
+          <p>{{ $t('tagline') }}</p>
         </div>
       </div>
     </div>

@@ -3,5 +3,5 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  API_URI: '"https://api.haikuninja.com/comments"'
+  API_URI: '"http://haiku-ninja-api.dev/"'
 })

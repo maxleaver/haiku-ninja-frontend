@@ -1,113 +1,185 @@
 import { mutations } from 'src/store/mutations'
 import { initialState } from 'src/store/initialState'
+import * as types from 'src/store/mutation-types'
 
 describe('mutations', () => {
-  it('sets state to requesting', () => {
-    const state = { isRequesting: false }
-    mutations.showRequesting(state)
+  it('shows video loader', () => {
+    const state = { isFetchingVideos: false }
+    mutations[types.VIDEO_REQUEST](state)
     expect(state.abortSearch).to.be.false
-    expect(state.activeComment).to.equal(0)
-    expect(state.comments).to.be.empty
-    expect(state.errorMessage).to.be.false
-    expect(state.hasError).to.be.false
-    expect(state.isRequesting).to.be.true
-    expect(state.recordsSearched).to.equal(0)
+    expect(state.isFetchingVideos).to.be.true
     expect(state.showForm).to.be.false
-    expect(state.showResults).to.be.false
   })
 
-  it('appends comments to the array of comments', () => {
-    const state = { comments: ['item1'] }
-    expect(state.comments.length).to.equal(1)
-    mutations.appendComments(state, ['item 2', 'item3'])
-    expect(state.comments.length).to.equal(3)
-  })
-
-  it('increments number of records searched by 100', () => {
-    const state = { recordsSearched: 0 }
-    mutations.incrementSearched(state, 100)
-    expect(state.recordsSearched).to.equal(100)
-  })
-
-  it('sets state to display results', () => {
+  it('appends and displays video search results', () => {
     const state = {
-      isRequesting: true,
-      recordsSearched: 500,
-      showForm: true,
-      showResults: false
+      isFetchingVideos: true,
+      nextPageToken: '',
+      showVideos: false,
+      videos: []
     }
-    mutations.showResults(state)
+    mutations[types.VIDEO_SUCCESS](state, { videos: ['one', 'two'], nextPageToken: 'abc123' })
+    expect(state.videos).to.have.lengthOf(2)
+    expect(state.nextPageToken).to.equal('abc123')
+    expect(state.isFetchingVideos).to.be.false
+    expect(state.showVideos).to.be.true
+  })
+
+  it('shows an error on video search failure', () => {
+    const state = {
+      errorMessage: '',
+      hasError: false,
+      isFetchingVideos: true,
+      showForm: false
+    }
+    mutations[types.VIDEO_FAILURE](state, 'error message')
+    expect(state.errorMessage).to.equal('error message')
+    expect(state.hasError).to.be.true
+    expect(state.isFetchingVideos).to.be.false
+    expect(state.showForm).to.be.true
+  })
+
+  it('shows video search results', () => {
+    const state = {
+      isFetchingVideos: true,
+      showHaiku: true,
+      showVideos: false
+    }
+    mutations[types.VIDEO_SHOW](state)
+    expect(state.isFetchingVideos).to.be.false
+    expect(state.showHaiku).to.be.false
+    expect(state.showVideos).to.be.true
+  })
+
+  it('shows haiku loader while fetching', () => {
+    const state = {
+      abortSearch: true,
+      isFetchingHaiku: false,
+      showForm: true
+    }
+    mutations[types.HAIKU_REQUEST](state)
     expect(state.abortSearch).to.be.false
-    expect(state.activeComment).to.equal(0)
-    expect(state.errorMessage).to.be.false
-    expect(state.hasError).to.be.false
-    expect(state.isRequesting).to.be.false
-    expect(state.recordsSearched).to.equal(0)
+    expect(state.isFetchingHaiku).to.be.true
     expect(state.showForm).to.be.false
-    expect(state.showResults).to.be.true
+  })
+
+  it('appends haiku and increments searched on successful request', () => {
+    const state = { 'haiku': [], recordsSearched: 10 }
+    mutations[types.HAIKU_SUCCESS](state, { haiku: ['one', 'two'], searched: 50 })
+    expect(state.haiku).to.have.lengthOf(2)
+    expect(state.recordsSearched).to.equal(60)
+  })
+
+  it('shows an error on haiku search failure', () => {
+    const state = {
+      errorMessage: '',
+      hasError: false,
+      isFetchingHaiku: true,
+      showForm: false
+    }
+    mutations[types.HAIKU_FAILURE](state, 'error message')
+    expect(state.errorMessage).to.equal('error message')
+    expect(state.hasError).to.be.true
+    expect(state.isFetchingHaiku).to.be.false
+    expect(state.showForm).to.be.true
+  })
+
+  it('shows haiku results', () => {
+    const state = {
+      abortSearch: true,
+      isFetchingHaiku: true,
+      showForm: true,
+      showHaiku: false
+    }
+    mutations[types.HAIKU_SHOW](state)
+    expect(state.abortSearch).to.be.false
+    expect(state.activeHaiku).to.equal(0)
+    expect(state.isFetchingHaiku).to.be.false
+    expect(state.showForm).to.be.false
+    expect(state.showHaiku).to.be.true
+  })
+
+  it('clears haiku results', () => {
+    const state = {
+      activeHaiku: 2,
+      haiku: ['one', 'two'],
+      recordsSearched: 100
+    }
+    mutations[types.HAIKU_CLEAR](state)
+    expect(state.activeHaiku).to.equal(0)
+    expect(state.haiku).to.be.empty
+    expect(state.recordsSearched).to.equal(0)
   })
 
   it('shows error message', () => {
     const state = { hasError: false, errorMessage: '' }
-    mutations.showError(state, 'testing error')
+    mutations[types.SHOW_ERROR](state, 'testing error')
     expect(state.abortSearch).to.be.false
-    expect(state.activeComment).to.equal(0)
-    expect(state.comments).to.be.empty
+    expect(state.activeHaiku).to.equal(0)
+    expect(state.haiku).to.be.empty
     expect(state.errorMessage).to.equal('testing error')
     expect(state.hasError).to.be.true
-    expect(state.isRequesting).to.be.false
+    expect(state.isFetchingVideos).to.be.false
+    expect(state.isFetchingHaiku).to.be.false
     expect(state.recordsSearched).to.equal(0)
     expect(state.showForm).to.be.true
-    expect(state.showResults).to.be.false
+    expect(state.showHaiku).to.be.false
   })
 
-  it('updates url', () => {
-    const state = { videoUrl: null }
-    mutations.updateUrl(state, 'http://www.example.com')
-    expect(state.videoUrl).to.equal('http://www.example.com')
+  it('updates form data', () => {
+    const state = { formInput: null }
+    mutations[types.UPDATE_FORM](state, 'http://www.example.com')
+    expect(state.formInput).to.equal('http://www.example.com')
   })
 
-  it('resets state to the initial state', () => {
+  it('resets state to initial state', () => {
     const state = {}
-    let reset = initialState()
+    const expected = initialState()
 
-    mutations.resetState(state)
-    expect(state).to.deep.equal(reset)
+    mutations[types.RESET_APP](state)
+    expect(state).to.deep.equal(expected)
   })
 
-  it('increases the active comment by one', () => {
+  it('clear errors and search results', () => {
     const state = {
-      comments: ['one', 'two', 'three'],
-      activeComment: 1
+      activeHaiku: 2,
+      haiku: ['one', 'two', 'three'],
+      hasError: false,
+      errorMessage: '',
+      videos: ['one', 'two', 'three']
     }
-    mutations.incrementComment(state)
-    expect(state.activeComment).to.equal(2)
+    mutations[types.CLEAR_RESULTS](state)
+    expect(state.activeHaiku).to.equal(0)
+    expect(state.haiku).to.be.empty
+    expect(state.errorMessage).to.equal('')
+    expect(state.hasError).to.be.false
+    expect(state.videos).to.be.empty
   })
 
-  it('will not increase active comment past the total comment count', () => {
+  it('increases the active haiku by one, but not past the total haiku count', () => {
     const state = {
-      comments: ['one', 'two', 'three'],
-      activeComment: 2
+      haiku: ['one', 'two', 'three'],
+      activeHaiku: 1
     }
-    mutations.incrementComment(state)
-    expect(state.activeComment).to.equal(2)
+    mutations[types.INCREMENT_HAIKU](state)
+    expect(state.activeHaiku).to.equal(2)
+
+    mutations[types.INCREMENT_HAIKU](state)
+    expect(state.activeHaiku).to.equal(2)
   })
 
-  it('decreases the active comment by one', () => {
+  it('decreases the active haiku by one, but not below zero', () => {
     const state = {
-      comments: ['one', 'two', 'three'],
-      activeComment: 2
+      haiku: ['one', 'two', 'three'],
+      activeHaiku: 2
     }
-    mutations.decrementComment(state)
-    expect(state.activeComment).to.equal(1)
-  })
+    mutations[types.DECREMENT_HAIKU](state)
+    expect(state.activeHaiku).to.equal(1)
 
-  it('will not decrease active comment below zero', () => {
-    const state = {
-      comments: ['one', 'two', 'three'],
-      activeComment: 0
-    }
-    mutations.decrementComment(state)
-    expect(state.activeComment).to.equal(0)
+    mutations[types.DECREMENT_HAIKU](state)
+    expect(state.activeHaiku).to.equal(0)
+
+    mutations[types.DECREMENT_HAIKU](state)
+    expect(state.activeHaiku).to.equal(0)
   })
 })

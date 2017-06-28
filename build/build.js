@@ -1,8 +1,6 @@
 // https://github.com/shelljs/shelljs
 require('./check-versions')()
 
-process.env.NODE_ENV = 'production'
-
 var ora = require('ora')
 var path = require('path')
 var chalk = require('chalk')
@@ -23,7 +21,9 @@ shell.config.silent = false
 
 webpack(webpackConfig, function (err, stats) {
   spinner.stop()
+
   if (err) throw err
+
   process.stdout.write(stats.toString({
     colors: true,
     modules: false,

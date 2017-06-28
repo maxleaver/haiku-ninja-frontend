@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'comment-list-header',
+  name: 'haiku-list-header',
 
   props: {
     found: Number

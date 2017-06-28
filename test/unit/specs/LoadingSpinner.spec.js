@@ -2,43 +2,45 @@ import { mount } from 'avoriaz'
 import LoadingSpinner from 'src/components/LoadingSpinner'
 
 describe('LoadingSpinner.vue', () => {
-  var clickHandler = sinon.stub()
-  var wrapper
+  function getProps (overrides) {
+    overrides = overrides || {}
+    const defaults = {
+      isFetchingHaiku: true,
+      isFetchingVideos: false,
+      cancel: () => 'cancel!',
+      found: 10,
+      searched: 50
+    }
 
-  beforeEach(() => {
-    wrapper = mount(LoadingSpinner, {
-      propsData: {
-        cancel: clickHandler,
-        found: 10,
-        searched: 50
-      }
-    })
+    return { propsData: Object.assign({}, defaults, overrides) }
+  }
+
+  it('displays a count of found and searched records when searching for haiku', () => {
+    const wrapper = mount(LoadingSpinner, getProps())
+
+    expect(wrapper.contains('#resultCounter')).to.be.true
+    expect(wrapper.find('#resultCounter')[0].text().trim()).to.equal('Found 10 Haiku in 50 comments')
   })
 
-  it('shows a count of found and searched records', () => {
-    const found = wrapper.find('.found')[0]
-
-    expect(wrapper.contains('.searched')).to.be.true
-    expect(found.text()).to.equal('10')
-  })
-
-  it('shows a count of seached records', () => {
-    const searched = wrapper.find('.searched')[0]
-
-    expect(wrapper.contains('.searched')).to.be.true
-    expect(searched.text()).to.equal('50')
+  it('does NOT display searched or found records count when searching videos', () => {
+    const wrapper = mount(LoadingSpinner, getProps({ isFetchingHaiku: false, isFetchingVideos: true }))
+    expect(wrapper.contains('#resultCounter')).to.be.false
   })
 
   it('has a cancel button', () => {
-    const button = wrapper.find('button')[0]
+    const wrapper = mount(LoadingSpinner, getProps())
 
     expect(wrapper.contains('button')).to.be.true
-    expect(button.contains('span')).to.be.true
+    expect(wrapper.contains('#buttonText')).to.be.true
+    expect(wrapper.find('button')[0].contains('span')).to.be.true
     expect(wrapper.find('#buttonText')[0].text()).to.equal('Stop Searching')
   })
 
-  it('triggers the cancel action when the cancel button is pressed', () => {
-    wrapper.find('button')[0].simulate('click')
+  it('triggers a cancel action when cancel is pressed', () => {
+    const clickHandler = sinon.stub()
+    const wrapper = mount(LoadingSpinner, getProps({ cancel: clickHandler }))
+
+    wrapper.find('button')[0].trigger('click')
     expect(clickHandler.called).to.be.true
   })
 })

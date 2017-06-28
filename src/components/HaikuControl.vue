@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'comment-control',
+  name: 'haiku-control',
 
   props: {
     clickAction: Function,

@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'comment',
+  name: 'haiku',
 
   props: {
     author: String,

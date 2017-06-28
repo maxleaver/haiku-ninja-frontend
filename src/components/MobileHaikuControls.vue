@@ -1,12 +1,12 @@
 <template>
   <div class="visible-xs panel panel-default">
     <div class="panel-body">
-      <div id="leftControl" v-on:click="decrementComment" v-bind:class="decrementStyle">
-        <span class="glyphicon glyphicon-chevron-left"></span> Previous
+      <div id="leftControl" v-on:click="decrementHaiku" v-bind:class="decrementStyle">
+        <span class="glyphicon glyphicon-chevron-left"></span> {{ $t('previousButton') }}
       </div>
 
-      <div id="rightControl" v-on:click="incrementComment" v-bind:class="incrementStyle">
-        Next <span class="glyphicon glyphicon-chevron-right"></span>
+      <div id="rightControl" v-on:click="incrementHaiku" v-bind:class="incrementStyle">
+        {{ $t('nextButton') }} <span class="glyphicon glyphicon-chevron-right"></span>
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'mobile-comment-controls',
+  name: 'mobile-haiku-controls',
 
   props: {
     canDecrement: Boolean,
@@ -35,8 +35,8 @@ export default {
 
   methods: {
     ...mapMutations([
-      'decrementComment',
-      'incrementComment'
+      'decrementHaiku',
+      'incrementHaiku'
     ])
   }
 }

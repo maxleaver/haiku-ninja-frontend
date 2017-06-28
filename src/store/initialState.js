@@ -1,15 +1,19 @@
 export function initialState () {
   return {
     abortSearch: false,
-    activeComment: 0,
-    comments: [],
+    activeHaiku: 0,
+    haiku: [],
     errorMessage: '',
+    formInput: '',
     hasError: false,
-    isRequesting: false,
+    isFetchingHaiku: false,
+    isFetchingVideos: false,
+    nextPageToken: '',
     recordsSearched: 0,
     showForm: true,
-    showResults: false,
-    videoUrl: '',
+    showHaiku: false,
+    showVideos: false,
+    videos: [],
     year: new Date().getFullYear()
   }
 }

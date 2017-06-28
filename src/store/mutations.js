@@ -1,68 +1,105 @@
 import { initialState } from './initialState'
+import * as types from './mutation-types'
 
 export var state = initialState()
 
 export const mutations = {
-  showRequesting (state) {
+  [types.VIDEO_REQUEST] (state) {
     state.abortSearch = false
-    state.activeComment = 0
-    state.comments = []
-    state.errorMessage = false
-    state.hasError = false
-    state.isRequesting = true
-    state.recordsSearched = 0
+    state.isFetchingVideos = true
     state.showForm = false
-    state.showResults = false
   },
 
-  appendComments (state, comments) {
-    state.comments = state.comments.concat(comments)
+  [types.VIDEO_SUCCESS] (state, payload) {
+    state.isFetchingVideos = false
+    state.nextPageToken = payload.nextPageToken
+    state.showVideos = true
+    state.videos = state.videos.concat(payload.videos)
   },
 
-  incrementSearched (state, searched) {
-    state.recordsSearched = state.recordsSearched + searched
-  },
-
-  showResults (state) {
-    state.abortSearch = false
-    state.activeComment = 0
-    state.errorMessage = false
-    state.hasError = false
-    state.isRequesting = false
-    state.recordsSearched = 0
-    state.showForm = false
-    state.showResults = true
-  },
-
-  showError (state, message) {
-    state.abortSearch = false
-    state.activeComment = 0
-    state.comments = []
+  [types.VIDEO_FAILURE] (state, message) {
     state.errorMessage = message
     state.hasError = true
-    state.isRequesting = false
+    state.isFetchingVideos = false
+    state.showForm = true
+  },
+
+  [types.VIDEO_SHOW] (state) {
+    state.isFetchingVideos = false
+    state.showVideos = true
+    state.showHaiku = false
+  },
+
+  [types.HAIKU_REQUEST] (state) {
+    state.abortSearch = false
+    state.isFetchingHaiku = true
+    state.showForm = false
+  },
+
+  [types.HAIKU_SUCCESS] (state, payload) {
+    state.haiku = state.haiku.concat(payload.haiku)
+    state.recordsSearched = state.recordsSearched + payload.searched
+  },
+
+  [types.HAIKU_FAILURE] (state, message) {
+    state.errorMessage = message
+    state.hasError = true
+    state.isFetchingHaiku = false
+    state.showForm = true
+  },
+
+  [types.HAIKU_SHOW] (state) {
+    state.abortSearch = false
+    state.activeHaiku = 0
+    state.isFetchingHaiku = false
+    state.showForm = false
+    state.showHaiku = true
+  },
+
+  [types.HAIKU_CLEAR] (state) {
+    state.activeHaiku = 0
+    state.haiku = []
+    state.recordsSearched = 0
+  },
+
+  [types.SHOW_ERROR] (state, message) {
+    state.abortSearch = false
+    state.activeHaiku = 0
+    state.haiku = []
+    state.errorMessage = message
+    state.hasError = true
+    state.isFetchingVideos = false
+    state.isFetchingHaiku = false
     state.recordsSearched = 0
     state.showForm = true
-    state.showResults = false
+    state.showHaiku = false
   },
 
-  updateUrl (state, url) {
-    state.videoUrl = url.trim()
+  [types.CLEAR_RESULTS] (state) {
+    state.activeHaiku = 0
+    state.haiku = []
+    state.errorMessage = ''
+    state.hasError = false
+    state.videos = []
   },
 
-  resetState (state) {
+  [types.UPDATE_FORM] (state, formData) {
+    state.formInput = formData.trim()
+  },
+
+  [types.RESET_APP] (state) {
     state = Object.assign(state, initialState())
   },
 
-  incrementComment (state) {
-    if (state.activeComment + 1 < state.comments.length) {
-      state.activeComment = state.activeComment + 1
+  [types.INCREMENT_HAIKU] (state) {
+    if (state.activeHaiku + 1 < state.haiku.length) {
+      state.activeHaiku = state.activeHaiku + 1
     }
   },
 
-  decrementComment (state) {
-    if (state.activeComment > 0) {
-      state.activeComment = state.activeComment - 1
+  [types.DECREMENT_HAIKU] (state) {
+    if (state.activeHaiku > 0) {
+      state.activeHaiku = state.activeHaiku - 1
     }
   }
 }

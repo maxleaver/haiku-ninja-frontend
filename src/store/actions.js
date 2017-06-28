@@ -1,91 +1,143 @@
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 import getYouTubeID from 'get-youtube-id'
 import HttpErrorHandler from 'src/services/HttpErrorHandler'
+import * as types from 'src/store/mutation-types'
 import lang from 'src/lang/en'
 
-var CancelToken = axios.CancelToken
-var cancel
+let api = new ApiService()
+
+export const decrementHaiku = ({ commit }) => {
+  commit(types.DECREMENT_HAIKU)
+}
+
+export const incrementHaiku = ({ commit }) => {
+  commit(types.INCREMENT_HAIKU)
+}
+
+export const updateForm = ({ commit }, e) => {
+  commit(types.UPDATE_FORM, e.target.value)
+}
+
+export const resetApp = ({ commit }) => {
+  commit(types.RESET_APP)
+}
+
+export const showVideoResults = ({ commit }) => {
+  commit(types.HAIKU_CLEAR)
+  commit(types.VIDEO_SHOW)
+}
 
 export const submitForm = ({ commit, dispatch, state }) => {
-  const id = getYouTubeID(state.videoUrl)
-
-  if (!id) {
-    commit('showError', 'Invalid URL')
+  if (!state.formInput) {
+    commit(types.SHOW_ERROR, lang.errors.noInput)
     return
   }
 
-  commit('showRequesting')
-  dispatch('fetchComments', { id: id, nextPageToken: null })
+  commit(types.CLEAR_RESULTS)
+
+  const id = getYouTubeID(state.formInput, { fuzzy: false })
+
+  if (id) {
+    fetchHaiku({ commit, dispatch }, { id: id, nextPageToken: null })
+    return
+  }
+
+  fetchVideos({ commit, dispatch }, { q: state.formInput, nextPageToken: null })
 }
 
-export const fetchComments = ({ commit, dispatch }, payload) => {
+export const fetchHaiku = ({ commit, dispatch }, payload) => {
+  const nextPageToken = payload.hasOwnProperty('nextPageToken') ? payload.nextPageToken : null
+
   // Confirm data has id property
   if (!payload.hasOwnProperty('id') || !payload.id) {
-    commit('showError', lang.errors.badRequest)
+    commit(types.SHOW_ERROR, lang.errors.badRequest)
+    return
   }
 
-  // Set next page token to null if one was not received
-  if (!payload.hasOwnProperty('nextPageToken') || !payload.nextPageToken) {
-    payload.nextPageToken = null
-  }
+  commit(types.HAIKU_REQUEST)
 
-  // Call the API resource
-  axios.get(process.env.API_URI, {
-    params: {
-      id: payload.id,
-      nextPageToken: payload.nextPageToken || null,
-      type: 'youtube'
-    },
+  api.get('/comments', { id: payload.id, nextPageToken: nextPageToken, type: 'youtube' })
+    .then(response => {
+      if (response === undefined || !response) {
+        commit(types.HAIKU_SHOW)
+        return
+      }
 
-    headers: { 'Authorization': 'Bearer ' + process.env.JWT_TOKEN },
+      commit(types.HAIKU_SUCCESS, {
+        haiku: getHaiku(response),
+        searched: getCommentsSearched(response)
+      })
 
-    cancelToken: new CancelToken(function executor (c) {
-      cancel = c
+      if (response.hasOwnProperty('nextPageToken') && response.nextPageToken) {
+        // Next page token found. Fetch again.
+        fetchHaiku({ commit, dispatch }, { id: payload.id, nextPageToken: response.nextPageToken })
+        return
+      }
+
+      // Display results
+      commit(types.HAIKU_SHOW)
     })
-  })
-  .then(response => {
-    if (!response.hasOwnProperty('data') || !response.data) {
-      // No data in response
-      commit('showResults')
-      return
-    }
-
-    if (response.data.hasOwnProperty('haiku') && response.data.haiku) {
-      // No haiku in response
-      commit('appendComments', response.data.haiku)
-    }
-
-    if (response.data.hasOwnProperty('commentsSearched') && response.data.commentsSearched) {
-      // No comments searched count in response
-      commit('incrementSearched', response.data.commentsSearched)
-    }
-
-    if (response.data.hasOwnProperty('nextPageToken') && response.data.nextPageToken) {
-      // Next page token found. Fetching again.
-      dispatch('fetchComments', { id: payload.id, nextPageToken: response.data.nextPageToken })
-      return
-    }
-
-    // Display results
-    commit('showResults')
-  })
-  .catch((error) => {
-    var handler
-
-    if (axios.isCancel(error)) {
-      // Request was cancelled by user
-      return
-    }
-
-    // Get friendly error message
-    handler = new HttpErrorHandler(error)
-
-    // Show error
-    commit('showError', handler.reason())
-  })
+    .catch(error => {
+      commit(types.SHOW_ERROR, getErrorMessage(error))
+    })
 }
 
-export const cancelRequest = ({ commit }) => {
-  cancel('Operation cancelled by user')
-  commit('showResults')
+export const fetchVideos = ({ commit, dispatch }, payload) => {
+  const nextPageToken = payload.hasOwnProperty('nextPageToken') ? payload.nextPageToken : null
+
+  if (!payload.hasOwnProperty('q') || !payload.q) {
+    // No search phrase provided
+    commit(types.SHOW_ERROR, lang.errors.badRequest)
+    return
+  }
+
+  commit(types.VIDEO_REQUEST)
+
+  api.get('/videos', { q: payload.q, nextPageToken: nextPageToken })
+    .then(response => {
+      let nextPageToken = null
+      let videos = []
+
+      if (response.hasOwnProperty('nextPageToken') && response.nextPageToken) {
+        nextPageToken = response.nextPageToken
+      }
+
+      if (response.hasOwnProperty('items') && response.items) {
+        videos = response.items
+      }
+
+      commit(types.VIDEO_SUCCESS, {
+        'videos': videos,
+        'nextPageToken': nextPageToken
+      })
+    })
+    .catch(error => {
+      commit(types.SHOW_ERROR, getErrorMessage(error))
+    })
+}
+
+export const cancel = ({ commit }) => {
+  api.cancelRequest('Operation cancelled by user')
+  commit(types.HAIKU_SHOW)
+}
+
+function getHaiku (response) {
+  let haiku = []
+  if (response.hasOwnProperty('haiku') && response.haiku) {
+    haiku = response.haiku
+  }
+  return haiku
+}
+
+function getCommentsSearched (response) {
+  let searched = 0
+  if (response.hasOwnProperty('commentsSearched') && response.commentsSearched) {
+    searched = response.commentsSearched
+  }
+  return searched
+}
+
+function getErrorMessage (error) {
+  var handler = new HttpErrorHandler(error)
+  return handler.reason()
 }
