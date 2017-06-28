@@ -86,12 +86,6 @@ export default {
     videos: Array
   },
 
-  methods: {
-    test: function () {
-      console.log('HEYYYY!')
-    }
-  },
-
   created: function () {
     var vm = this
 
