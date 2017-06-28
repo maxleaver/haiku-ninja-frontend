@@ -1,4 +1,8 @@
+dist: trusty
 language: node_js
+sudo: false
+before_script:
+    - jdk_switcher use oraclejdk8
 jdk:
   - oraclejdk8
 node_js:
