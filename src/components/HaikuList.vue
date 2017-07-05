@@ -36,22 +36,46 @@
       <mobile-haiku-controls
         :canDecrement="canDecrement"
         :canIncrement="canIncrement"
+        :decrement="decrement"
+        :increment="increment"
         />
     </div>
 
     <no-haiku v-else></no-haiku>
 
-    <span v-if="videos.length > 0">
-      <button id="videoButton" @click="showVideos" class="btn btn-lg btn-primary">
-        <span class="glyphicon glyphicon-apple"></span> <span id="selectText">{{ $t('pickAnotherButton') }}</span>
-      </button>
+    <div class="row hidden-xs">
+      <div class="col-xs-12">
+        <span v-if="videos.length > 0">
+          <button id="videoButton" @click="showVideos" class="btn btn-lg btn-primary">
+            <span class="glyphicon glyphicon-apple"></span> <span id="selectText">{{ $t('pickAnotherButton') }}</span>
+          </button>
 
-      <span class="separatorText">or</span>
-    </span>
+          <span class="separatorText text-center">or</span>
+        </span>
 
-    <button id="resetButton" @click="reset" class="btn btn-lg btn-danger">
-      <span class="glyphicon glyphicon-repeat"></span> <span id="resetText">{{ $t('resetButton') }}</span>
-    </button>
+        <button id="resetButton" @click="reset" class="btn btn-lg btn-danger">
+          <span class="glyphicon glyphicon-repeat"></span> <span id="resetText">{{ $t('resetButton') }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row visible-xs">
+      <div class="col-xs-12" v-if="videos.length > 0">
+        <button id="videoButton" @click="showVideos" class="btn btn-lg btn-primary">
+          <span class="glyphicon glyphicon-apple"></span> <span id="selectText">{{ $t('pickAnotherButton') }}</span>
+        </button>
+      </div>
+
+      <div class="col-xs-12" v-if="videos.length > 0" style="margin: 5px 0;">
+        <span class="separatorText text-center">— or —</span>
+      </div>
+
+      <div class="col-xs-12">
+        <button id="resetButton" @click="reset" class="btn btn-lg btn-danger">
+          <span class="glyphicon glyphicon-repeat"></span> <span id="resetText">{{ $t('resetButton') }}</span>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 

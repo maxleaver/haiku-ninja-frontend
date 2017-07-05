@@ -10,7 +10,10 @@
       <div class="form-group">
         <alert v-if="hasError" :message="errorMessage"></alert>
 
+        <label for="search">{{ $t('inputLabel') }}</label>
+
         <input
+          id="search"
           @input="update"
           v-on:keydown.enter="submit"
           type="text"

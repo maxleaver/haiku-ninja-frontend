@@ -46,21 +46,22 @@ describe('HaikuList.vue', () => {
     expect(wrapper.contains(NoHaiku)).to.be.true
   })
 
-  it('has one button if there are no video search results', () => {
-    const wrapper = mount(HaikuList, getProps({ videos: [] }))
-    const buttons = wrapper.find('button')
-
-    expect(buttons.length).to.equal(1)
-  })
-
-  it('has two buttons if there are video search results', () => {
+  it('has a start over button', () => {
     const wrapper = mount(HaikuList, getProps())
-    const buttons = wrapper.find('button')
-
-    expect(buttons.length).to.equal(2)
+    expect(wrapper.contains('#resetButton')).to.be.true
   })
 
-  it('has a show videos button and triggers the show videos action when clicked', () => {
+  it('does not have a video search button if there are no video search results', () => {
+    const wrapper = mount(HaikuList, getProps({ videos: [] }))
+    expect(wrapper.contains('#videoButton')).to.be.false
+  })
+
+  it('has a video search button if there are video search results', () => {
+    const wrapper = mount(HaikuList, getProps())
+    expect(wrapper.contains('#videoButton')).to.be.true
+  })
+
+  it('triggers the show videos action when the video search button is clicked', () => {
     const clickHandler = sinon.stub()
     const wrapper = mount(HaikuList, getProps({ showVideos: clickHandler }))
 
@@ -69,7 +70,7 @@ describe('HaikuList.vue', () => {
     expect(clickHandler.called).to.be.true
   })
 
-  it('has a reset button and triggers the reset action when clicked', () => {
+  it('triggers the reset action when the start over button is clicked', () => {
     const clickHandler = sinon.stub()
     const wrapper = mount(HaikuList, getProps({ reset: clickHandler }))
 

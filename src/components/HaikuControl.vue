@@ -3,7 +3,7 @@
     v-on:click="clickAction"
     class="clickable controlButton"
     >
-    <span v-bind:class="glyph"></span>
+    <span v-bind:class="'glyphicon glyphicon-circle-arrow-' + direction"></span>
   </div>
 </template>
 
@@ -14,12 +14,6 @@ export default {
   props: {
     clickAction: Function,
     direction: String
-  },
-
-  computed: {
-    glyph: function () {
-      return 'glyphicon glyphicon-circle-arrow-' + this.direction
-    }
   }
 }
 </script>

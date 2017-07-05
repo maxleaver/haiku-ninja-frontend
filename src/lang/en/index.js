@@ -1,8 +1,8 @@
 export default {
   title: 'Haiku Ninja',
   tagline: 'Finding Zen in YouTube Comments',
-  inputLabel: 'Search YouTube or Enter YouTube URL',
-  inputPlaceholder: 'Search YouTube or enter a YouTube URL',
+  inputLabel: 'Search YouTube or Enter a YouTube URL',
+  inputPlaceholder: 'Search',
   submitButton: 'Find inner peace',
   loadingHeader: 'Finding Zen',
   stopSearchButton: 'Stop Searching',

@@ -1,11 +1,11 @@
 <template>
   <div class="visible-xs panel panel-default">
     <div class="panel-body">
-      <div id="leftControl" v-on:click="decrementHaiku" v-bind:class="decrementStyle">
+      <div id="leftControl" class="pull-left" v-on:click="decrement" v-bind:class="canDecrement ? 'clickable' : 'disabled'">
         <span class="glyphicon glyphicon-chevron-left"></span> {{ $t('previousButton') }}
       </div>
 
-      <div id="rightControl" v-on:click="incrementHaiku" v-bind:class="incrementStyle">
+      <div id="rightControl" class="pull-right" v-on:click="increment" v-bind:class="canIncrement ? 'clickable' : 'disabled'">
         {{ $t('nextButton') }} <span class="glyphicon glyphicon-chevron-right"></span>
       </div>
     </div>
@@ -13,31 +13,14 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
   name: 'mobile-haiku-controls',
 
   props: {
     canDecrement: Boolean,
-    canIncrement: Boolean
-  },
-
-  computed: {
-    decrementStyle: function () {
-      return this.canDecrement ? 'pull-left clickable' : 'pull-left disabled'
-    },
-
-    incrementStyle: function () {
-      return this.canIncrement ? 'pull-right clickable' : 'pull-right disabled'
-    }
-  },
-
-  methods: {
-    ...mapMutations([
-      'decrementHaiku',
-      'incrementHaiku'
-    ])
+    canIncrement: Boolean,
+    decrement: Function,
+    increment: Function
   }
 }
 </script>
