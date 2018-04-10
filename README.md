@@ -1,6 +1,6 @@
 # Haiku Ninja Frontend
 
-Frontend Vue application for the Haiku Ninja website. Grabs YouTube comments and returns them as haiku.
+Frontend Vue application for the Haiku Ninja website. Grabs YouTube comments and returns them as haiku. The backend API is available [here](https://github.com/maxleaver/haiku-ninja-frontend).
 
 ## Installation
 
